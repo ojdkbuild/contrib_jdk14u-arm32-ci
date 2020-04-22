@@ -1,0 +1,52 @@
+# Copyright 2020, akashche at redhat.com
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+language: cpp
+
+sudo: required
+
+services:
+  - docker
+
+os:
+  - linux
+
+script:
+  - set -e
+  - export OJDK_TAG=`git describe --exact-match --tags HEAD`
+  - if [ -z ${OJDK_TAG} ] ; then exit 1 ; fi
+  - export OJDK_UPDATE=`echo ${OJDK_TAG} | sed 's/\./ /g' | sed 's/+/ /' | awk '{print $3}'`
+  - echo ${OJDK_UPDATE}
+  - export OJDK_BUILD=`echo ${OJDK_TAG} | sed 's/+/ /' | awk '{print $2}'`
+  - echo ${OJDK_BUILD}
+  - export OJDK_MILESTONE=ojdkbuild
+  - export OJDK_IMAGE=jdk-14.0.${OJDK_UPDATE}-${OJDK_MILESTONE}-linux-armhf
+  - ./jdk14u-arm32-u1604.sh ${OJDK_TAG}
+
+deploy:
+  provider: releases
+  skip_cleanup: true
+  api_key:
+    secure: JnXURdjygKCVP1mjiFVPpSHFNNKdbbE9mvteN+l+hf4Ueucup4lV4WfivmqU+OVvuauU+ORKfRGHYFpYUf81CEC87XgPjytG7/L03VNWfo7mcvHCCK6DL91CFJsU32TlDgjS+fGSwOLFJDKFN5/30M5LN2fq9CFmY50KTFQd5ep1TlynvIys9af58CH6qxtCW0xriMJo2j6qrmMPZHm3TYpuNfzCNotkyPMLEqTVY43RkRP25c2zFGAbmxC092ztyDfSm1Vu9fTIBdlmZ4QJZuOgrsclkLHrqaL5mDCvh92+C3x1YPGHXUs/MVoQINnqikPpqOHChWEZzyAe2uTE1wgiwniaW9DQ29842xNLn99BOq/n38KoJdaC+Bs5gxThEAqhFyHfAZ5oufqpV8ZwBt6m3/u2WXjfThZsdDArRmk803Ydc4JHBUSxe9r74jUfmP3zlQfAaYueWNF2BntkpX5T+fNiH7nY34I6IA2OX6r3W8cWMcDwZ7M2+JD8Zq++ibwnO1Fdja56I975pF9Ef0feCopS2F2NMRw9f4F7y3fdBblG/fgK1gM4HdHCWyZVVW8KONWa3299SJouBajWhbbUUDRprQpKUKp/Ytt8/rsQ9LmuPzwGqMiRuesvpCr3WZrBNuCA9BSiMrP/FpgAl7S7qgQHWrgDoiS72tp2AoQ=
+  file:
+    - ${OJDK_IMAGE}.zip
+    - ${OJDK_IMAGE}.zip.sha256
+  on:
+    repo: ojdkbuild/contrib_jdk14u-arm32-ci
+    tags: true
+
+notifications:
+  email:
+    on_success: always
+
