@@ -1,7 +1,7 @@
 OpenJDK 14 ARM32 builds
 =======================
 
-[![travis](https://travis-ci.org/ojdkbuild/contrib_jdk14u-arm32-ci.svg?branch=jdk-14.0.1%2B7)](https://travis-ci.org/ojdkbuild/contrib_jdk14u-arm32-ci/builds)
+[![travis](https://travis-ci.org/ojdkbuild/contrib_jdk14u-arm32-ci.svg?branch=jdk-14.0.2%2B12)](https://travis-ci.org/ojdkbuild/contrib_jdk14u-arm32-ci/builds)
 
 OpenJDK 14 ARM32 builds done on Travis CI - [downloads](https://github.com/ojdkbuild/contrib_jdk14u-arm32-ci/releases).
 
